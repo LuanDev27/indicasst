@@ -4,6 +4,8 @@ Calculadora e visualizador de índices estatísticos de segurança do trabalho,
 conforme a **ABNT NBR 14280**. Roda inteiro no navegador: sem cadastro, sem
 backend, sem enviar dado nenhum para lugar nenhum.
 
+**Live:** https://indicasst.vercel.app
+
 > **Estado**: Fatia 1 entregue — o núcleo de cálculo dos índices existe, está
 > testado a 100% e publicado. O Módulo 1 (formulário) é a Fatia 2.
 

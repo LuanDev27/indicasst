@@ -61,6 +61,8 @@ vercel --prod
 
 Build estático. Sem variável de ambiente, sem função serverless, sem banco.
 
+Produção: https://indicasst.vercel.app
+
 ## Estado atual das fatias
 
 - [x] Fatia 1 — `core/tipos.ts`, `core/formatacao.ts`, `core/memoria.ts`, `core/indices.ts` + testes
