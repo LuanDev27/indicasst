@@ -8,7 +8,7 @@
  * `Intl.NumberFormat` — `arquitetura.test.ts` falha se algum chamar.
  */
 
-import type { ErroCalculo } from './tipos';
+import { falha, ok, type ErroCalculo, type Result } from './tipos';
 
 const CASAS_PADRAO = 2;
 
@@ -32,6 +32,43 @@ export function formatarInteiro(valor: number): string {
 /** `41.6` → `"42%"`. Percentuais de composição são inteiros (FR-042). */
 export function formatarPercentual(valor: number, casas = 0): string {
   return `${formatarNumero(valor, casas)}%`;
+}
+
+/**
+ * O caminho de volta: lê o que o usuário digitou em pt-BR e devolve número.
+ *
+ * `"1.785,71"` → `1785.71`. O ponto é separador de milhar e a vírgula é decimal,
+ * porque é o que o teclado brasileiro produz. Texto que não é número devolve
+ * `Result` com erro — nunca `NaN` disfarçado de zero (princípio VI).
+ */
+export function interpretarNumero(
+  texto: string,
+  campo = 'valor',
+): Result<number> {
+  const limpo = texto.trim();
+
+  if (limpo === '') {
+    return falha({ tipo: 'entrada-invalida', campo, motivo: 'está vazio' });
+  }
+
+  // A forma é conferida ANTES de limpar. Apagar os pontos primeiro faria "1..2"
+  // virar 12 e "12.34" virar 1234 — número plausível e errado, que é o pior
+  // resultado possível aqui. Grupo de milhar só vale com três dígitos.
+  if (!/^-?(\d+|\d{1,3}(\.\d{3})+)(,\d+)?$/.test(limpo)) {
+    return falha({ tipo: 'entrada-invalida', campo, motivo: 'não é um número' });
+  }
+
+  const numero = Number(limpo.replace(/\./g, '').replace(',', '.'));
+
+  if (!Number.isFinite(numero)) {
+    return falha({
+      tipo: 'entrada-invalida',
+      campo,
+      motivo: 'é grande demais para ser calculado',
+    });
+  }
+
+  return ok(numero);
 }
 
 /** Mensagem em pt-BR derivada do tipo do erro. Princípio VIII. */

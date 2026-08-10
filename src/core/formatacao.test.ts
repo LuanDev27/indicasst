@@ -4,9 +4,10 @@ import {
   formatarInteiro,
   formatarNumero,
   formatarPercentual,
+  interpretarNumero,
   mensagemDeErro,
 } from './formatacao';
-import type { ErroCalculo } from './tipos';
+import type { ErroCalculo, Result } from './tipos';
 
 /**
  * O separador de milhar do pt-BR é U+00A0 em alguns runtimes e '.' em outros.
@@ -57,6 +58,70 @@ describe('formatarPercentual', () => {
 
   it('aceita casas explícitas', () => {
     expect(formatarPercentual(41.64, 1)).toBe('41,6%');
+  });
+});
+
+describe('interpretarNumero', () => {
+  function valor(r: Result<number>): number {
+    if (!r.ok) throw new Error(`esperava número, veio ${r.erro.tipo}`);
+    return r.valor;
+  }
+
+  function motivo(r: Result<number>): string {
+    if (r.ok) throw new Error('esperava falha, veio número');
+    return r.erro.tipo === 'entrada-invalida' ? r.erro.motivo : r.erro.tipo;
+  }
+
+  it('lê o formato brasileiro: ponto de milhar, vírgula decimal', () => {
+    expect(valor(interpretarNumero('1.785,71'))).toBe(1785.71);
+    expect(valor(interpretarNumero('403.200'))).toBe(403200);
+    expect(valor(interpretarNumero('8,5'))).toBe(8.5);
+  });
+
+  it('é o inverso de formatarNumero no caso de aceite', () => {
+    expect(valor(interpretarNumero(formatarInteiro(403200)))).toBe(403200);
+  });
+
+  it('aceita inteiro simples, zero e negativo', () => {
+    expect(valor(interpretarNumero('200'))).toBe(200);
+    expect(valor(interpretarNumero('0'))).toBe(0);
+    expect(valor(interpretarNumero('-5'))).toBe(-5);
+  });
+
+  it('ignora espaço em volta', () => {
+    expect(valor(interpretarNumero('  42  '))).toBe(42);
+  });
+
+  it('campo vazio é vazio, não zero', () => {
+    expect(motivo(interpretarNumero(''))).toBe('está vazio');
+    expect(motivo(interpretarNumero('   '))).toBe('está vazio');
+  });
+
+  it.each(['abc', '12abc', '1,2,3', '--3', ','])('recusa %o', (texto) => {
+    expect(motivo(interpretarNumero(texto))).toBe('não é um número');
+  });
+
+  it.each(['1..2', '8.', '1.2.3', '12.34', '.5', '1.23'])(
+    'recusa %o em vez de apagar o ponto e devolver número plausível e errado',
+    (texto) => {
+      expect(motivo(interpretarNumero(texto))).toBe('não é um número');
+    },
+  );
+
+  it('recusa número grande demais em vez de devolver Infinity', () => {
+    expect(motivo(interpretarNumero('9'.repeat(400)))).toBe(
+      'é grande demais para ser calculado',
+    );
+  });
+
+  it('nomeia o campo na mensagem de erro', () => {
+    const r = interpretarNumero('abc', 'horas por dia');
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      expect(mensagemDeErro(r.erro)).toBe(
+        'O campo "horas por dia" não é um número.',
+      );
+    }
   });
 });
 

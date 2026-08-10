@@ -114,31 +114,42 @@ TG 1.785,71, TI 25 com as memórias visíveis.
       por dedo) e 3.4.3.5 (teto de 6 000 dias), que a extração revelou serem lógica
 - [x] T027 [US1] `src/core/diasDebitados.test.ts`: merge sobrescreve por chave, JSON
       inválido não sobrescreve a tabela existente, soma de dias
-- [ ] T028 [US1] `src/features/indices/SeletorOcorrencias.tsx`: seleção de ocorrências
-      da tabela, com soma automática dos dias debitados
-- [ ] T029 [US1] `src/components/AvisoNormativo.tsx`: aviso permanente de tabela
-      parcial + marcação por entrada com `confirmado: false`
-- [ ] T030 [P] [US1] `src/components/CampoNumerico.tsx`: input numérico pt-BR com
+- [x] T028 [US1] `src/features/indices/SeletorOcorrencias.tsx`: seleção de ocorrências
+      da tabela, com soma automática dos dias debitados — mais importação/exportação
+      da tabela em JSON (FR-023) e exibição dos avisos de 3.4.3.1 e 3.4.3.5
+- [x] T029 [US1] `src/components/AvisoNormativo.tsx`: aviso permanente de tabela
+      parcial + marcação por entrada com `confirmado: false` (`SeloNaoConferido`)
+- [x] T030 [P] [US1] `src/components/CampoNumerico.tsx`: input numérico pt-BR com
       rótulo, unidade, erro e alvo de toque adequado a 360px
-- [ ] T031 [P] [US1] `src/components/CartaoResultado.tsx`: valor formatado + unidade +
-      slot de memória + fonte normativa
-- [ ] T032 [P] [US1] `src/components/BlocoMemoriaCalculo.tsx`: renderiza `memoria`
-- [ ] T033 [US1] `src/features/indices/esquema.ts`: schema Zod do `Periodo` — HHT > 0,
-      dias ≥ 0, contagens inteiras, acidentes com afastamento ≤ total, óbitos ≤
-      acidentes com afastamento
-- [ ] T034 [US1] `src/features/indices/FormularioHHT.tsx`: separação visual explícita
+- [x] T031 [P] [US1] `src/components/CartaoResultado.tsx`: valor formatado + unidade +
+      slot de memória + fonte normativa + `nota` de divergência
+- [x] T032 [P] [US1] `src/components/BlocoMemoriaCalculo.tsx`: renderiza `memoria`
+- [x] T033 [US1] `src/features/indices/esquema.ts`: schema Zod do `Periodo` — dias ≥ 0,
+      contagens inteiras, óbitos ≤ acidentes com afastamento, e `montarPeriodo`
+      convertendo pelos construtores do núcleo.
+      **Desvio deliberado**: HHT > 0 **não** virou regra bloqueante. O cenário de
+      aceite 4 da spec exige que efetivo zero exiba a explicação do núcleo; barrar
+      no formulário esconderia justamente essa explicação. Quem avisa é o cartão.
+      Exigiu `interpretarNumero` em `core/formatacao.ts` — leitura de número pt-BR,
+      que recusa `1..2` e `12.34` em vez de apagar o ponto e devolver valor errado
+- [x] T034 [US1] `src/features/indices/FormularioHHT.tsx`: separação visual explícita
       entre o que entra no cômputo (horas trabalhadas, horas extras) e o que não entra
       (férias, afastamentos, faltas, licenças) — FR-013
-- [ ] T035 [US1] `src/features/indices/PainelIndices.tsx`: os oito `CartaoResultado`,
+- [x] T035 [US1] `src/features/indices/PainelIndices.tsx`: os oito `CartaoResultado`,
       cada um com memória visível
-- [ ] T036 [US1] `src/features/indices/index.tsx`: liga formulário e painel via React
+- [x] T036 [US1] `src/features/indices/index.tsx`: liga formulário e painel via React
       Hook Form; erro de `Result` vira mensagem, nunca número
-- [ ] T037 [US1] `src/App.tsx`: navegação entre módulos (só o Módulo 1 ativo nesta fatia)
-- [ ] T038 [US1] Teste de componente: caso de aceite ponta a ponta na tela; e efetivo
-      zero exibindo explicação em vez de `NaN`
+- [x] T037 [US1] `src/App.tsx`: navegação entre módulos (só o Módulo 1 ativo nesta fatia)
+- [x] T038 [US1] `src/features/indices/index.test.tsx`: caso de aceite ponta a ponta na
+      tela; efetivo zero exibindo explicação em vez de `NaN`; validação de campo; e a
+      seleção de ocorrências aplicando 3.4.3.1
 
 **Checkpoint Fatia 2**: 🚩 **PUBLICAR NA VERCEL E VALIDAR COM A TURMA** antes de
 qualquer tarefa da Fase 4 (SC-010, portão do plano).
+
+> Código da Fatia 2 concluído em 2026-08-10. O portão **continua fechado**: ele não é
+> "o código está pronto", é "usuários reais usaram e disseram o que quebrou". Falta
+> ainda a verificação a 360px sem rolagem horizontal (SC-006), que é T077.
 
 ---
 

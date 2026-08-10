@@ -6,9 +6,9 @@ backend, sem enviar dado nenhum para lugar nenhum.
 
 **Live:** https://indicasst.vercel.app
 
-> **Estado**: Fatia 1 entregue — o núcleo de cálculo dos índices existe, está
-> testado a 100% e publicado. O quadro 1 da norma (dias debitados) já está no núcleo;
-> falta o Módulo 1 na tela, que é a Fatia 2.
+> **Estado**: Fatia 2 entregue — o Módulo 1 calcula os oito índices na tela, com a
+> memória de cálculo e a fonte normativa de cada um, e com o quadro 1 da NBR 14280
+> (dias debitados) selecionável. Falta validar com usuários reais antes da Fatia 3.
 
 ---
 
@@ -107,8 +107,8 @@ npm run dev
 ## Roadmap
 
 - [x] **Fatia 1** — núcleo de cálculo dos índices + testes
-- [ ] **Fatia 2** — Módulo 1: calculadora com memória de cálculo *(publicar e validar
-      com usuários reais antes de seguir)*
+- [x] **Fatia 2** — Módulo 1: calculadora com memória de cálculo *(código pronto;
+      falta validar com usuários reais antes de seguir)*
 - [ ] **Fatia 3** — Módulo 2: estatística descritiva, histograma e box plot
 - [ ] **Fatia 4** — Módulo 3: série histórica e gráfico de controle
 - [ ] **Fatia 5** — Módulo 4: diagrama de Pareto
