@@ -1,0 +1,19 @@
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.local
+
+.vercel
+.env
+.env.*
+!.env.example
+
+# Preferências locais do agente — podem conter allowlists da máquina.
+.claude/settings.local.json
+
+.DS_Store
+Thumbs.db
+
+*.log
+npm-debug.log*
