@@ -66,6 +66,13 @@ export interface Indice {
   readonly casas: number;
   readonly memoria: string;
   readonly fonte: string;
+  /**
+   * Ressalva que precisa aparecer junto do número: divergência entre a norma e o
+   * critério adotado, ou o fato de o índice não ser da NBR 14280. Opcional porque
+   * a maioria dos índices não tem o que ressalvar — quando tem, esconder seria
+   * decidir pelo usuário, que é o que o princípio III proíbe.
+   */
+  readonly nota?: string;
 }
 
 /* -------------------------------------------------------------------------- */

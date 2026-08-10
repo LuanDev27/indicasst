@@ -38,10 +38,12 @@ Templates verificados:
      constituição, mantidas como registro.
 
 Follow-up TODOs:
-  - TODO(TABELA_NBR_14280): a tabela de dias debitados completa e conferida ainda
-    não foi obtida (ver Parte 3 do pacote original). Enquanto não for, entradas
-    não confirmadas MUST carregar flag `confirmado: false` e a interface MUST
-    exibir aviso de tabela parcial. Este item bloqueia a Fatia 2, não a Fatia 1.
+  - TODO(TABELA_NBR_14280) — parcialmente resolvido em 2026-08-10. O quadro 1 foi
+    extraído do texto da norma (`docs/nbr-14280-extracao.md`) e implementado em
+    `src/core/diasDebitados.ts`, incluindo as regras 3.4.3.1 e 3.4.3.5. Falta a
+    conferência num exemplar adquirido da ABNT: até lá toda entrada MUST manter
+    `confirmado: false` e a interface MUST exibir o aviso de tabela não conferida.
+    Deixou de bloquear a Fatia 2.
 -->
 
 # IndicaSST Constitution

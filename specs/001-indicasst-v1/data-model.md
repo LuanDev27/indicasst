@@ -40,7 +40,8 @@ export interface Indice {
   readonly unidade: string;     // "acidentes por milhão de HHT"
   readonly casas: number;       // casas decimais de exibição: 0 ou 2
   readonly memoria: string;     // "TF = (5 × 1.000.000) ÷ 403.200 = 12,40"
-  readonly fonte: string;       // "ABNT NBR 14280"
+  readonly fonte: string;       // "ABNT NBR 14280:2001, item 3.6.1.2 — …"
+  readonly nota?: string;       // ressalva que precisa aparecer junto do número
 }
 ```
 
@@ -48,9 +49,19 @@ export interface Indice {
 `HHT = 403.200`, não `403.200,00`. Taxas usam 2 casas. O arredondamento continua
 acontecendo num lugar só (`formatacao.ts`); `casas` apenas diz quantas.
 
-`fonte` cita a norma sem número de item enquanto a NBR 14280 não for consultada em
-fonte primária — ver `TODO(NBR_14280_ITENS)` em `src/core/indices.ts`. Inventar item
-seria precisão falsa, exatamente o que o princípio III existe para impedir.
+`fonte` cita o item normativo desde 2026-08-10, conferido no texto da norma e
+registrado em `docs/nbr-14280-extracao.md` — resolve o antigo `TODO(NBR_14280_ITENS)`.
+Três índices do Módulo 1 (taxa de incidência, mortalidade e letalidade) **não** são
+da NBR 14280: a busca no texto integral não encontra "letalidade" nem "mortalidade", e
+não há taxa de incidência entre as medidas de 3.6. A `fonte` deles aponta a origem
+real — Previdência Social / epidemiologia — porque atribuí-los à ABNT seria a precisão
+falsa que o princípio III existe para impedir.
+
+`nota` é o mecanismo de divergência: quando a norma e o critério do projeto discordam,
+o app mostra os dois lados em vez de escolher em silêncio. Hoje há três usos —
+a taxa de gravidade em inteiros exigida por 3.6.2 contra as 2 casas de SC-001; a
+distinção entre 3.6.1.1 e 3.6.1.2 na taxa de frequência; e a regra de 3.5 sobre somar
+tempo perdido com tempo debitado.
 
 `memoria` e `fonte` são obrigatórios **no tipo**: um índice sem memória de cálculo ou
 sem referência normativa não compila (princípios II e III). Toda função de

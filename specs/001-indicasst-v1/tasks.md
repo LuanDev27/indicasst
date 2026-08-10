@@ -104,13 +104,15 @@ TG 1.785,71, TI 25 com as memórias visíveis.
 
 ### Fatia 2 — Módulo 1 na tela
 
-> ⚠️ **Bloqueada por `TODO(TABELA_NBR_14280)`**: T026–T029 precisam da tabela de dias
-> debitados conferida. T030–T038 não dependem dela e podem começar antes.
+> ✅ **Destravada em 2026-08-10**: o quadro 1 foi extraído em
+> `docs/nbr-14280-extracao.md` e T026–T027 estão feitas. T029 continua obrigatória —
+> as entradas seguem `confirmado: false` até conferência em exemplar da ABNT.
 
-- [ ] T026 [US1] `src/core/diasDebitados.ts`: `TABELA_PADRAO` (subconjunto citado,
+- [x] T026 [US1] `src/core/diasDebitados.ts`: `TABELA_PADRAO` (subconjunto citado,
       cada entrada com `fonte` e `confirmado`), `buscar`, `mesclar`, `somarDias`,
-      `validarJson`
-- [ ] T027 [US1] `src/core/diasDebitados.test.ts`: merge sobrescreve por chave, JSON
+      `validarJson` — mais `lerJson` e as regras 3.4.3.1 (só o osso de maior valor
+      por dedo) e 3.4.3.5 (teto de 6 000 dias), que a extração revelou serem lógica
+- [x] T027 [US1] `src/core/diasDebitados.test.ts`: merge sobrescreve por chave, JSON
       inválido não sobrescreve a tabela existente, soma de dias
 - [ ] T028 [US1] `src/features/indices/SeletorOcorrencias.tsx`: seleção de ocorrências
       da tabela, com soma automática dos dias debitados
@@ -262,7 +264,8 @@ Setup (T001–T007)
         └─────────────> Polish (T070–T079)
 ```
 
-- **T026–T029 bloqueadas** por `TODO(TABELA_NBR_14280)`.
+- ~~**T026–T029 bloqueadas** por `TODO(TABELA_NBR_14280)`~~ — destravadas em
+  2026-08-10 pela extração da norma; T026–T027 concluídas.
 - **T045–T046** (hooks + wrappers de gráfico) são pré-requisito de todo gráfico:
   US2, US3, US4 e US5.
 - **US5 não pode ser antecipada** — portão do plano e da constituição.

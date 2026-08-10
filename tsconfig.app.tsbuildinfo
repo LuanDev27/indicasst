@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/setuptests.ts","./src/core/arquitetura.test.ts","./src/core/formatacao.test.ts","./src/core/formatacao.ts","./src/core/indices.test.ts","./src/core/indices.ts","./src/core/memoria.test.ts","./src/core/memoria.ts","./src/core/tipos.test.ts","./src/core/tipos.ts"],"version":"5.9.3"}

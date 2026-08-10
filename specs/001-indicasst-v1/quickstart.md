@@ -66,7 +66,8 @@ Produção: https://indicasst.vercel.app
 ## Estado atual das fatias
 
 - [x] Fatia 1 — `core/tipos.ts`, `core/formatacao.ts`, `core/memoria.ts`, `core/indices.ts` + testes
-- [ ] Fatia 2 — Módulo 1 (bloqueada por `TODO(TABELA_NBR_14280)`)
+- [ ] Fatia 2 — Módulo 1 na tela. `core/diasDebitados.ts` (quadro 1 + regras 3.4.3.1
+      e 3.4.3.5) já está pronto; falta a UI
 - [ ] Fatia 3 — `core/descritiva.ts` + Módulo 2
 - [ ] Fatia 4 — `core/serie.ts` + Módulo 3
 - [ ] Fatia 5 — `core/pareto.ts` + Módulo 4

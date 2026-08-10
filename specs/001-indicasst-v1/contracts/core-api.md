@@ -221,15 +221,27 @@ Regras codificadas aqui, não no componente:
 
 ---
 
-## `core/diasDebitados.ts` — Fatia 2
+## `core/diasDebitados.ts` — Fatia 2 ✅ implementado
 
 ```ts
-export const TABELA_PADRAO: TabelaDiasDebitados;   // subconjunto, com `confirmado`
+export const TETO_DIAS = 6_000;                    // item 3.4.3.5
+export const TABELA_PADRAO: TabelaDiasDebitados;   // quadro 1, tudo com `confirmado: false`
 export function buscar(tabela: TabelaDiasDebitados, chave: string): EntradaDiasDebitados | undefined;
 export function mesclar(padrao: TabelaDiasDebitados, usuario: TabelaDiasDebitados): TabelaDiasDebitados;
-export function somarDias(entradas: readonly EntradaDiasDebitados[]): Dias;
+export function somarDias(entradas: readonly EntradaDiasDebitados[]): SomaDiasDebitados;
 export function validarJson(json: unknown): Result<TabelaDiasDebitados>;
+export function lerJson(texto: string): Result<TabelaDiasDebitados>;
 ```
+
+`somarDias` devolve `SomaDiasDebitados`, não `Dias` puro, porque a extração da norma
+mostrou que a soma carrega duas regras que a UI precisa explicar:
+
+- **3.4.3.1** — no mesmo dedo conta-se só o osso de maior valor; dedos diferentes
+  somam-se. As entradas vencidas vão para `desprezadas`, com o motivo em `avisos`.
+- **3.4.3.5** — o que passar de 6 000 dias é desprezado, e a `memoria` mostra o corte
+  como `mín(6.000; …)` em vez de exibir um total que não fecha com as parcelas.
+
+`temEntradaNaoConfirmada` é o gancho do aviso de tabela não conferida (T029).
 
 ---
 

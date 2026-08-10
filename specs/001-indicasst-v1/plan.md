@@ -63,8 +63,10 @@ mensais, até 6 categorias por gráfico de composição. Usuário único, dados 
 **Portões não técnicos herdados do pacote original** (não bloqueiam `/speckit-tasks`,
 bloqueiam fatias específicas):
 
-- `TODO(TABELA_NBR_14280)`: tabela de dias debitados completa e conferida. Bloqueia a
-  **Fatia 2**, não a Fatia 1 — `core/indices.ts` recebe dias debitados como número.
+- ~~`TODO(TABELA_NBR_14280)`~~: destravado em 2026-08-10 — quadro 1 extraído em
+  `docs/nbr-14280-extracao.md` e implementado em `core/diasDebitados.ts`. Permanece
+  pendente só a conferência num exemplar da ABNT, que mantém `confirmado: false` em
+  toda entrada e o aviso na interface, mas não bloqueia mais a Fatia 2.
 - Validação humana da `spec.md` com dois colegas da turma antes de implementar além da
   Fatia 2 (SC-010).
 

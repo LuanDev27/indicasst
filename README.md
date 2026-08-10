@@ -7,7 +7,8 @@ backend, sem enviar dado nenhum para lugar nenhum.
 **Live:** https://indicasst.vercel.app
 
 > **Estado**: Fatia 1 entregue — o núcleo de cálculo dos índices existe, está
-> testado a 100% e publicado. O Módulo 1 (formulário) é a Fatia 2.
+> testado a 100% e publicado. O quadro 1 da norma (dias debitados) já está no núcleo;
+> falta o Módulo 1 na tela, que é a Fatia 2.
 
 ---
 
@@ -116,13 +117,23 @@ npm run dev
 
 ## Limitação conhecida
 
-A tabela de dias debitados da NBR 14280 **ainda não foi conferida em fonte
-primária**. A norma é comercializada pela ABNT, e apostilas de curso técnico
-divergem entre si. Até que isso se resolva:
+A tabela de dias debitados (quadro 1 da NBR 14280) está implementada em
+[`src/core/diasDebitados.ts`](src/core/diasDebitados.ts), com as regras 3.4.3.1 e
+3.4.3.5, mas **não foi conferida em exemplar adquirido da ABNT** — a extração veio de
+uma cópia pública, e apostilas de curso técnico divergem entre si (três delas
+devolveram a tabela dos dedos com as linhas deslocadas). Por isso:
 
-- os dias debitados entram como número informado pelo usuário;
-- quando a tabela embarcada existir, cada entrada carregará uma flag de procedência
-  confirmada, e a interface avisará que a tabela é parcial.
+- toda entrada embarcada carrega `confirmado: false`, e a interface avisa que a tabela
+  não foi conferida;
+- o usuário pode importar a própria tabela por JSON, que sobrescreve a padrão chave a
+  chave;
+- os dias debitados continuam podendo ser informados direto como número.
+
+Três dos índices do Módulo 1 — taxa de incidência, mortalidade e letalidade — **não
+são da NBR 14280**: são indicadores da Previdência Social e da epidemiologia. O app
+diz isso em cada um, em vez de atribuí-los à ABNT. Onde a norma diverge do critério
+adotado (ela pede a taxa de gravidade em números inteiros; o exemplo de aceite usa
+duas casas), o app mostra os dois valores em vez de escolher em silêncio.
 
 Um app de SST que calcula errado em silêncio é pior que nenhum app.
 

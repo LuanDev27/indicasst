@@ -4,6 +4,9 @@ dist-ssr/
 coverage/
 *.local
 
+# Cache incremental do tsc — muda a cada build e só gera ruído no diff.
+*.tsbuildinfo
+
 .vercel
 .env
 .env.*

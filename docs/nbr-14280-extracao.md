@@ -4,6 +4,21 @@
 terceiro, não de cópia adquirida da ABNT). Resolve o `TODO(TABELA_NBR_14280)` para
 fins de implementação, **não** substitui a consulta à norma vigente.
 
+**Aplicado ao código em 2026-08-10**:
+
+| O que | Onde |
+|---|---|
+| Quadro 1 inteiro (51 entradas, todas `confirmado: false`) | `src/core/diasDebitados.ts` — `TABELA_PADRAO` |
+| Regras 3.4.3.1 e 3.4.3.5 | `somarDias`, com `avisos` em pt-BR e `desprezadas` |
+| Itens normativos de cada índice (seção 3) | `src/core/indices.ts` — constantes `FONTE_*` |
+| TI, mortalidade e letalidade fora da norma (seção 3) | `fonte` própria + `nota` em cada um |
+| Divergência da TG (seção 4.1) | `nota` da TG, com o inteiro de 3.6.2 ao lado das 2 casas |
+| Regra de 3.5 / nota de 3.6.2 (seção 2) | `valorTempoComputadoDoAcidente` + `nota` do TC |
+
+**O que continua em aberto**: a conferência da tabela num exemplar adquirido da ABNT.
+Enquanto não acontecer, nenhuma entrada vira `confirmado: true` e a interface precisa
+manter o aviso (T029).
+
 > **Nota de procedência.** As três primeiras tentativas por fontes secundárias
 > (apostilas e resumos) devolveram a tabela dos quirodátilos **com as linhas
 > deslocadas** — atribuíam ao polegar o valor da 3ª falange do indicador. A extração
@@ -104,7 +119,7 @@ Estas não são tabela — são lógica, e o app erra se ignorá-las.
 | **3.4.3.4** | Redução permanente da visão = percentual dos valores do quadro, determinado pela seguradora. | idem |
 | **3.4.3.6** | Lesão fora do quadro (órgão interno, perda de função) = percentual de 6 000 dias, por parecer médico. | entrada livre com aviso |
 | **3.4.3.3** | Perda de audição só é incapacidade permanente parcial quando **total** para um ou ambos os ouvidos. | validação |
-| **3.5** | Incapacidade permanente **e** temporária do mesmo acidente: conta-se só a de maior tempo, não a soma. | ⚠️ o `TC = diasPerdidos + diasDebitados` atual é simplificação |
+| **3.5** | Incapacidade permanente **e** temporária do mesmo acidente: conta-se só a de maior tempo, não a soma. | `valorTempoComputadoDoAcidente` |
 | **Nota 3.6.2** | Em morte ou incapacidade permanente não se contam os dias perdidos, só os debitados — salvo se os perdidos excederem os debitados. | idem |
 | **Rodapé 1** | Hérnia inguinal não reparada: 50 dias. Reclassificar após reparada. | entrada especial |
 
@@ -149,10 +164,24 @@ princípio III.
 
 O `spec.md` (SC-001) exige `TG = 1.785,71`, com duas casas. São incompatíveis.
 
-**Encaminhamento proposto** (princípio III manda mostrar as duas e deixar o usuário
+**Encaminhamento adotado** (princípio III manda mostrar as duas e deixar o usuário
 escolher, nunca decidir por ele): manter 2 casas como padrão, porque é o critério de
 aceite acordado e o que o material didático usa, e exibir nota citando 3.6.2 com o
 valor inteiro ao lado. Não mudar em silêncio.
+
+Implementado no campo `nota` da TG: no caso de aceite ela diz que a norma pede
+`1.786` enquanto o cartão mostra `1.785,71`.
+
+### 4.1.1 Tempo computado: a soma do período não é a regra do acidente
+
+A regra de 3.5 e da nota de 3.6.2 vale **dentro de um acidente**: onde houve morte ou
+incapacidade permanente, conta-se só o tempo debitado, salvo se o perdido o exceder.
+
+`calcularPeriodo` continua somando `diasPerdidos + diasDebitados` — e isso está certo
+para um total de período, porque os dias perdidos costumam vir de *outros* acidentes.
+Aplicar `máx` no agregado apagaria dias legítimos e quebraria SC-001 sem motivo. A
+regra do acidente virou função própria (`valorTempoComputadoDoAcidente`) e a ressalva
+virou `nota` do TC, para que quem lança acidente a acidente saiba qual usar.
 
 ### 4.2 Taxa de Frequência: a norma distingue duas taxas
 

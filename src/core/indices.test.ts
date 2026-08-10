@@ -12,6 +12,7 @@ import {
   tempoComputado,
   valorHht,
   valorTempoComputado,
+  valorTempoComputadoDoAcidente,
 } from './indices';
 import type { Indice, Periodo, Result } from './tipos';
 import {
@@ -131,7 +132,7 @@ describe('todo índice carrega memória de cálculo e fonte normativa', () => {
   it.each(indices)('%s tem memória, fonte, nome, sigla e unidade', (_nome, resultado) => {
     const indice: Indice = forcar(resultado);
     expect(indice.memoria.length).toBeGreaterThan(0);
-    expect(indice.fonte).toContain('NBR 14280');
+    expect(indice.fonte.length).toBeGreaterThan(0);
     expect(indice.nome.length).toBeGreaterThan(0);
     expect(indice.sigla.length).toBeGreaterThan(0);
     expect(indice.unidade.length).toBeGreaterThan(0);
@@ -140,6 +141,48 @@ describe('todo índice carrega memória de cálculo e fonte normativa', () => {
   it('a memória termina com o resultado formatado em pt-BR', () => {
     const indice = forcar(r.taxaGravidade);
     expect(indice.memoria.endsWith('1.785,71')).toBe(true);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* Princípio III — procedência: cada índice cita a fonte que é dele            */
+/* -------------------------------------------------------------------------- */
+
+describe('procedência das fontes', () => {
+  const r = calcularPeriodo(CASO_DE_ACEITE);
+
+  it('os índices da norma citam o item normativo, não só o número da NBR', () => {
+    expect(forcar(r.hht).fonte).toContain('3.2');
+    expect(forcar(r.tempoComputado).fonte).toContain('3.5');
+    expect(forcar(r.taxaFrequencia).fonte).toContain('3.6.1.2');
+    expect(forcar(r.taxaGravidade).fonte).toContain('3.6.2');
+    expect(forcar(r.mediaDiasPerdidos).fonte).toContain('3.6.3');
+  });
+
+  it('TI, mortalidade e letalidade não são atribuídas à NBR 14280', () => {
+    for (const resultado of [r.taxaIncidencia, r.mortalidade, r.letalidade]) {
+      const indice = forcar(resultado);
+      expect(indice.fonte).toContain('não consta da ABNT NBR 14280');
+      expect(indice.nota).toContain('não está na NBR 14280');
+    }
+  });
+
+  it('a TF diz qual das duas taxas de frequência da norma ela é', () => {
+    const indice = forcar(r.taxaFrequencia);
+    expect(indice.nota).toContain('3.6.1.1');
+    expect(indice.nota).toContain('3.6.1.3');
+  });
+
+  it('a TG mostra a divergência de 3.6.2 em vez de resolvê-la em silêncio', () => {
+    const indice = forcar(r.taxaGravidade);
+    expect(indice.casas).toBe(2);
+    expect(indice.memoria.endsWith('1.785,71')).toBe(true);
+    expect(indice.nota).toContain('números inteiros');
+    expect(indice.nota).toContain('1.786');
+  });
+
+  it('o tempo computado avisa que a soma do período não é a regra de um acidente', () => {
+    expect(forcar(r.tempoComputado).nota).toContain('3.5');
   });
 });
 
@@ -295,5 +338,41 @@ describe('funções isoladas', () => {
       acidentesSemAfastamento: a(15),
     });
     expect(forcar(r.taxaFrequencia).valor).toBe(TF_ESPERADA);
+  });
+});
+
+/* -------------------------------------------------------------------------- */
+/* Item 3.5 e nota de 3.6.2 — tempo computado de um acidente só                */
+/* -------------------------------------------------------------------------- */
+
+describe('valorTempoComputadoDoAcidente', () => {
+  it('sem incapacidade permanente, é o tempo perdido', () => {
+    expect(
+      valorTempoComputadoDoAcidente({ diasPerdidos: d(45), diasDebitados: d(0) }),
+    ).toBe(45);
+  });
+
+  it('com incapacidade permanente, conta só o debitado — não a soma', () => {
+    expect(
+      valorTempoComputadoDoAcidente({
+        diasPerdidos: d(120),
+        diasDebitados: d(600),
+      }),
+    ).toBe(600);
+  });
+
+  it('salvo quando os dias perdidos excedem os debitados', () => {
+    expect(
+      valorTempoComputadoDoAcidente({
+        diasPerdidos: d(800),
+        diasDebitados: d(600),
+      }),
+    ).toBe(800);
+  });
+
+  it('difere da soma do período — é por isso que a nota do TC existe', () => {
+    const entrada = { diasPerdidos: d(120), diasDebitados: d(600) };
+    expect(valorTempoComputado(entrada)).toBe(720);
+    expect(valorTempoComputadoDoAcidente(entrada)).toBe(600);
   });
 });
